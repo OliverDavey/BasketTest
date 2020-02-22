@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace BasketTest.Models
 {
-    public class Basket
+    public class CheckStockResult
     {
-        public string Id { get; set; }
+        public bool Success { get; set; }
 
-        public IEnumerable<BasketItem> Items { get; set; }
+        public string Message { get; set; }
     }
 }

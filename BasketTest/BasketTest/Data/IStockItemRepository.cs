@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BasketTest.Data
 {
-    public interface IBasketRepository
+    public interface IStockItemRepository
     {
-
-        Task<Basket> Get(string id);
+        Task<CheckStockResult> CheckStock(string itemId, int quantity);
     }
 }

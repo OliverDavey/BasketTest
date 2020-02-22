@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace BasketTest.Models
 {
-    public class Basket
+    public enum ProductTags
     {
-        public string Id { get; set; }
-
-        public IEnumerable<BasketItem> Items { get; set; }
+        HeadGear,
+        ActiveWear,
+        Winter
     }
 }

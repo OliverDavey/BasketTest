@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BasketTest.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,8 +30,10 @@ namespace BasketTest
         {
             services.AddControllers();
 
-            services.AddScoped<IBasketRepository, InMemoryBasketRepository>();
+            services.AddSingleton<IBasketRepository, InMemoryBasketRepository>();
+            services.AddSingleton<IStockItemRepository, InMemoryStockItemRepository>();
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket API", Version = "v1" });
