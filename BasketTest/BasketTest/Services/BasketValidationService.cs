@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BasketTest.Data;
-using BasketTest.Models;
 using BasketTest.SDK.Models;
+using BasketTest.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

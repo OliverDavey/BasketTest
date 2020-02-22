@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BasketTest.Models
+namespace BasketTest.Services.Models
 {
     public class CreateBasketModel
     {
-        public IEnumerable<CreateBasketItem> Items { get; set; }
+        public IList<PricedBasketItemModel> Items { get; set; } = new List<PricedBasketItemModel>();
     }
 }

@@ -36,6 +36,7 @@ namespace BasketTest
 
             services.AddScoped<IBasketValidationService, BasketValidationService>();
             services.AddScoped<IBasketService, BasketService>();
+            services.AddScoped<IPricingService, PricingService>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddSwaggerGen(c =>

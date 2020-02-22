@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BasketTest.Services.Models
 {
-    public class GetBasketModel
+    public  class GetBasketModel
     {
         public string Id { get; set; }
 

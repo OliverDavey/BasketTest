@@ -1,4 +1,4 @@
-﻿using BasketTest.Models;
+﻿using BasketTest.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,8 @@ namespace BasketTest.Data
 {
     public interface IStockItemRepository
     {
-        Task<CheckStockResult> CheckStock(string itemId, int quantity);
+        Task<CheckStockResult> CheckStock(string productId, int quantity);
+
+        Task<StockItem> GetItem(string itemId);
     }
 }

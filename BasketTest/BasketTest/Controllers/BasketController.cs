@@ -9,7 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using BasketTest.SDK.Models;
 using BasketTest.Services;
-using BasketTest.Models;
+using BasketTest.Services.Models;
 
 namespace BasketTest.Controllers
 {
@@ -18,21 +18,21 @@ namespace BasketTest.Controllers
     [Produces("application/json")]
     public class BasketController : ControllerBase
     {
-        private readonly IBasketRepository basketRepository;
         private readonly IBasketService basketService;
+        private readonly IPricingService pricingService;
         private readonly IBasketValidationService basketValidationService;
         private readonly IMapper mapper;
         private readonly ILogger<BasketController> logger;
 
         public BasketController(
-            IBasketRepository basketRepository,
             IBasketService basketService,
+            IPricingService pricingService,
             IBasketValidationService basketValidationService,
             IMapper mapper,
             ILogger<BasketController> logger)
         {
-            this.basketRepository = basketRepository;
             this.basketService = basketService;
+            this.pricingService = pricingService;
             this.basketValidationService = basketValidationService;
             this.mapper = mapper;
             this.logger = logger;
@@ -58,6 +58,7 @@ namespace BasketTest.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateBasketRequest request)
         {
+            // validation accepts a direct SDK model which it shouldn't do
             var validation = await this.basketValidationService.ValidateCreateBasket(request);
 
             if (!validation.Success)
@@ -65,13 +66,17 @@ namespace BasketTest.Controllers
                 return BadRequest(validation.Message);
             }
 
-            // Should fetch the prices from the repository, really
+            var unpricedItems = this.mapper.Map<IList<UnpricedBasketItemModel>>(request.Items);
+            var pricedItems = await this.pricingService.PriceItems(unpricedItems);
+
             var model = this.mapper.Map<CreateBasketModel>(request);
-            var basket = await this.basketRepository.Create(model);
+            model.Items = pricedItems;
 
-            var result = await this.basketService.GetBasket(basket.Id);
+            var result = await this.basketService.CreateBasket(model);
 
-            return Ok(result);
+            // Most likely going to need to fetch this info immediately afterwards anyway
+            var basket = await this.basketService.GetBasket(result.BasketId);
+            return Ok(basket);
         }
     }
 }

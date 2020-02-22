@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace BasketTest.Services
 {
-    public interface IBasketService
+    public interface IPricingService
     {
-        Task<GetBasketModel> GetBasket(string id);
-
-        Task<CreateBasketResult> CreateBasket(CreateBasketModel model);
+        Task<IList<PricedBasketItemModel>> PriceItems(IList<UnpricedBasketItemModel> items);
     }
 }

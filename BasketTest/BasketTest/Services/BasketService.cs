@@ -30,5 +30,18 @@ namespace BasketTest.Services
 
             return result;
         }
+
+        public async Task<CreateBasketResult> CreateBasket(CreateBasketModel model)
+        {
+            var basket = this.mapper.Map<Data.Models.CreateBasketModel>(model);
+
+            var result = await this.basketRepository.Create(basket);
+            
+            return new CreateBasketResult
+            {
+                Success = true,
+                BasketId = result.Id
+            };
+        }
     }
 }

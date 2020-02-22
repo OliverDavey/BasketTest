@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BasketTest.SDK.Models;
-using BasketTest.Models;
 using BasketTest.Data.Models;
+using BasketTest.Services.Models;
 
 namespace BasketTest.Profiles
 {
@@ -14,12 +14,15 @@ namespace BasketTest.Profiles
         public BasketProfile()
         {
             // Creation
-            CreateMap<SDK.Models.CreateBasketRequest, Models.CreateBasketModel>();
-            CreateMap<SDK.Models.CreateBasketItem, Models.CreateBasketItem>();
+            CreateMap<SDK.Models.CreateBasketRequest, Services.Models.CreateBasketModel>();
+            CreateMap<SDK.Models.CreateBasketItem, Services.Models.UnpricedBasketItemModel>();
+            CreateMap<SDK.Models.CreateBasketItem, Services.Models.PricedBasketItemModel>();
 
-            CreateMap<Models.CreateBasketModel, Data.Models.Basket>()
+            CreateMap<Services.Models.CreateBasketModel, Data.Models.CreateBasketModel>();
+            CreateMap<Data.Models.CreateBasketModel, Data.Models.Basket>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
-            CreateMap<Models.CreateBasketItem, Data.Models.BasketItem>()
+            CreateMap<Services.Models.PricedBasketItemModel, Data.Models.CreateBasketItem>();
+            CreateMap<Data.Models.CreateBasketItem, Data.Models.BasketItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
 
             // Reading
@@ -28,7 +31,9 @@ namespace BasketTest.Profiles
             CreateMap<Services.Models.GetBasketModel, SDK.Models.RetrieveBasketResponse>();
             CreateMap<Services.Models.GetBasketItemModel, SDK.Models.RetrieveBasketItem>(); //perhaps won't be needed when we aggregate them...
 
-            CreateMap<CheckStockResult, ValidationResult>();
+            CreateMap<Data.Models.StockItem, Services.Models.PricedBasketItemModel>();
+
+            CreateMap<CheckStockResult, Services.Models.ValidationResult>();
         }
     }
 }
