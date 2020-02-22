@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BasketTest.Data;
+using BasketTest.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,8 @@ namespace BasketTest
 
             services.AddSingleton<IBasketRepository, InMemoryBasketRepository>();
             services.AddSingleton<IStockItemRepository, InMemoryStockItemRepository>();
+
+            services.AddScoped<IBasketValidationService, BasketValidationService>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddSwaggerGen(c =>

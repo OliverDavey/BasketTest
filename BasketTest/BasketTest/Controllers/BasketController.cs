@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using BasketTest.SDK.Models;
+using BasketTest.Services;
 
 namespace BasketTest.Controllers
 {
@@ -18,12 +19,14 @@ namespace BasketTest.Controllers
     {
         private readonly IBasketRepository basketRepository;
         private readonly IStockItemRepository stockItemRepository;
+        private readonly IBasketValidationService basketValidationService;
         private readonly IMapper mapper;
         private readonly ILogger<BasketController> logger;
 
         public BasketController(
             IBasketRepository basketRepository,
             IStockItemRepository stockItemRepository,
+            IBasketValidationService basketValidationService,
             IMapper mapper,
             ILogger<BasketController> logger)
         {
@@ -53,13 +56,11 @@ namespace BasketTest.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateBasketRequest request)
         {
-            foreach (var item in request.Items)
+            var validation = await this.basketValidationService.ValidateCreateBasket(request);
+
+            if (!validation.Success)
             {
-                var stockCheck = await this.stockItemRepository.CheckStock(item.ItemId, item.Quantity);
-                if (!stockCheck.Success)
-                {
-                    return BadRequest(stockCheck.Message);
-                }
+                return BadRequest(validation.Message);
             }
 
             return Ok();

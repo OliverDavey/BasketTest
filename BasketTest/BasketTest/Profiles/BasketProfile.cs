@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BasketTest.SDK.Models;
+using BasketTest.Models;
 
 namespace BasketTest.Profiles
 {
@@ -11,7 +12,8 @@ namespace BasketTest.Profiles
     {
         public BasketProfile()
         {
-            CreateMap<GetBasketResponse, Models.Basket>();
+            CreateMap<Models.Basket, GetBasketResponse>();
+            CreateMap<CheckStockResult, ValidationResult>();
         }
     }
 }
