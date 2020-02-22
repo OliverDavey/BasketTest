@@ -19,6 +19,7 @@ namespace BasketTest.Services
             IMapper mapper)
         {
             this.stockItemRepository = stockItemRepository;
+            this.mapper = mapper;
         }
 
         public async Task<ValidationResult> ValidateCreateBasket(CreateBasketRequest basket)
@@ -43,10 +44,10 @@ namespace BasketTest.Services
                     };
                 }
 
-                var stockCheck = await this.stockItemRepository.CheckStock(item.ItemId, item.Quantity);
+                var stockCheck = await this.stockItemRepository.CheckStock(item.ProductId, item.Quantity);
                 if (!stockCheck.Success)
                 {
-                    var response = mapper.Map<ValidationResult>(stockCheck);
+                    var response = this.mapper.Map<ValidationResult>(stockCheck);
                     return response;
                 }
             }

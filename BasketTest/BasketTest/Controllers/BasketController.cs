@@ -9,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using BasketTest.SDK.Models;
 using BasketTest.Services;
+using BasketTest.Models;
 
 namespace BasketTest.Controllers
 {
@@ -18,20 +19,18 @@ namespace BasketTest.Controllers
     public class BasketController : ControllerBase
     {
         private readonly IBasketRepository basketRepository;
-        private readonly IStockItemRepository stockItemRepository;
         private readonly IBasketValidationService basketValidationService;
         private readonly IMapper mapper;
         private readonly ILogger<BasketController> logger;
 
         public BasketController(
             IBasketRepository basketRepository,
-            IStockItemRepository stockItemRepository,
             IBasketValidationService basketValidationService,
             IMapper mapper,
             ILogger<BasketController> logger)
         {
             this.basketRepository = basketRepository;
-            this.stockItemRepository = stockItemRepository;
+            this.basketValidationService = basketValidationService;
             this.mapper = mapper;
             this.logger = logger;
         }
@@ -39,6 +38,7 @@ namespace BasketTest.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("/{id}")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
             var basket = await this.basketRepository.Get(id);
@@ -47,7 +47,7 @@ namespace BasketTest.Controllers
                 return NotFound();
             }
 
-            var result = mapper.Map<GetBasketResponse>(basket);
+            var result = this.mapper.Map<GetBasketResponse>(basket);
             return Ok(result);
         }
 
@@ -63,7 +63,11 @@ namespace BasketTest.Controllers
                 return BadRequest(validation.Message);
             }
 
-            return Ok();
+            // Should fetch the prices from the repository, really
+            var model = this.mapper.Map<CreateBasketModel>(request);
+            var result = await this.basketRepository.Create(model);
+
+            return Ok(result);
         }
     }
 }

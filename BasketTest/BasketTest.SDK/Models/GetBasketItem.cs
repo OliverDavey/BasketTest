@@ -4,10 +4,12 @@ using System.Text;
 
 namespace BasketTest.SDK.Models
 {
-    public class CreateBasketItem
+    public class GetBasketItem
     {
         public string ProductId { get; set; }
 
         public int Quantity { get; set; }
+
+        public decimal Price { get; set; }
     }
 }

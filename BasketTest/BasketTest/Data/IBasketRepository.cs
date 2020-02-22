@@ -8,6 +8,7 @@ namespace BasketTest.Data
 {
     public interface IBasketRepository
     {
+        Task<Basket> Create(CreateBasketModel request);
 
         Task<Basket> Get(string id);
     }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace BasketTest.SDK.Models
+namespace BasketTest.Models
 {
     public class CreateBasketItem
     {
         public string ProductId { get; set; }
 
-        public int Quantity { get; set; }
+        public decimal Price { get; set; }
     }
 }

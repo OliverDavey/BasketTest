@@ -1,4 +1,5 @@
-﻿using BasketTest.Models;
+﻿using AutoMapper;
+using BasketTest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,19 @@ namespace BasketTest.Data
     public class InMemoryBasketRepository : IBasketRepository
     {
         private IList<Basket> baskets = new List<Basket>();
+        private readonly IMapper mapper;
 
-        public Task<Basket> Create()
+        public InMemoryBasketRepository(IMapper mapper)
         {
+            this.mapper = mapper;
+        }
 
+        public Task<Basket> Create(CreateBasketModel request)
+        {
+            var basket = this.mapper.Map<Basket>(request);
+            this.baskets.Add(basket);
+
+            return Task.FromResult(basket);
         }
 
         public Task<Basket> Get(string id)
