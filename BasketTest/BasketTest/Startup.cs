@@ -35,6 +35,7 @@ namespace BasketTest
             services.AddSingleton<IStockItemRepository, InMemoryStockItemRepository>();
 
             services.AddScoped<IBasketValidationService, BasketValidationService>();
+            services.AddScoped<IBasketService, BasketService>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddSwaggerGen(c =>

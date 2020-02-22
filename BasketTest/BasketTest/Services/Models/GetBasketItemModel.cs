@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BasketTest.Models
+namespace BasketTest.Services.Models
 {
-    public class BasketItem
+    public class GetBasketItemModel
     {
-        public string Id { get; set; }
-
         public string ProductId { get; set; }
+
+        public string ItemId { get; set; }
 
         public decimal Price { get; set; }
     }

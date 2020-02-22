@@ -1,4 +1,5 @@
-﻿using BasketTest.Models;
+﻿using BasketTest.Data.Models;
+using BasketTest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

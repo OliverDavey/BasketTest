@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BasketTest.Models
+namespace BasketTest.Data.Models
 {
     public class StockItem
     {

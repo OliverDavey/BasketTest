@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BasketTest.SDK.Models
 {
-    public class GetBasketItem
+    public class RetrieveBasketItem
     {
         public string ProductId { get; set; }
 
