@@ -10,5 +10,7 @@ namespace BasketTest.Services
     public interface IBasketValidationService
     {
         Task<ValidationResult> ValidateCreateBasket(CreateBasketRequest basket);
+
+        Task<ValidationResult> CheckOffer(GetBasketModel basket, string offerCode);
     }
 }

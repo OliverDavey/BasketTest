@@ -9,6 +9,8 @@ namespace BasketTest.SDK.Models
 
         public IList<RetrieveBasketItem> Items { get; set; } = new List<RetrieveBasketItem>();
 
+        public decimal SubTotal { get; set; }
+
         public decimal TotalPrice { get; set; }
     }
 }

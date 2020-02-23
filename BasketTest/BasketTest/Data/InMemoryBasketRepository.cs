@@ -31,5 +31,13 @@ namespace BasketTest.Data
 
             return Task.FromResult(result);
         }
+
+        public async Task<Basket> AddOffer(string basketId, string offerCode)
+        {
+            var basket = await this.Get(basketId);
+            basket.OfferCode = offerCode;
+
+            return basket;
+        }
     }
 }

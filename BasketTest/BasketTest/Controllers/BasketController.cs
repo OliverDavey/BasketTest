@@ -56,9 +56,9 @@ namespace BasketTest.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreateBasketRequest request)
         {
-            // validation accepts a direct SDK model which it shouldn't do
             var validation = await this.basketValidationService.ValidateCreateBasket(request);
 
             if (!validation.Success)
@@ -76,7 +76,30 @@ namespace BasketTest.Controllers
 
             // Most likely going to need to fetch this info immediately afterwards anyway
             var basket = await this.basketService.GetBasket(result.BasketId);
-            return Ok(basket);
+            return Ok(basket); // Should be updated to return Created, but this makes testing a little easier for now
+        }
+
+        [HttpPatch("{id}/Offer")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddOffer([FromRoute] string id, [FromBody] AddOfferRequest request)
+        {
+            var basket = await this.basketService.GetBasket(id);
+            if (basket == null)
+            {
+                return NotFound();
+            }
+
+            var validation = await this.basketValidationService.CheckOffer(basket, request.OfferCode);
+
+            if (!validation.Success)
+            {
+                return BadRequest(validation.Message);
+            }
+
+            // Add offer to basket
+            await this.basketService.AddOffer(id, request.OfferCode);
+            return Ok();
         }
     }
 }

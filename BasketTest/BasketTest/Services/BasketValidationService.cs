@@ -49,7 +49,7 @@ namespace BasketTest.Services
             };
         }
 
-        private async Task<ValidationResult> CheckStock(IList<CreateBasketItem> basketItems)
+        private async Task<ValidationResult> CheckStock(IList<SDK.Models.CreateBasketItem> basketItems)
         {
             foreach (var item in basketItems)
             {
@@ -90,7 +90,7 @@ namespace BasketTest.Services
             }
 
             // Are there items that it applies to
-            var basketItems = await this.GetItems(basket, offer);
+            var basketItems = await this.GetItems(basket);
             var itemTags = basketItems.SelectMany(item => item.Tags);
 
             if (!itemTags.Intersect(offer.ApplicableItems).Any())
@@ -103,10 +103,9 @@ namespace BasketTest.Services
             }
 
             // Have we met the minimum-spend threshold
-            var subTotal = basketItems.Sum(item => item.Price); // WRONG - needs to be the discountable subtotal
-            if (subTotal < offer.Threshold)
+            if (basket.DiscountableTotal < offer.Threshold)
             {
-                var difference = offer.Threshold - subTotal;
+                var difference = offer.Threshold - basket.DiscountableTotal;
                 return new ValidationResult
                 {
                     Success = false,
@@ -120,7 +119,7 @@ namespace BasketTest.Services
             };
         }
 
-        private async Task<List<StockItem>> GetItems(GetBasketModel basket, Offer offer)
+        private async Task<List<StockItem>> GetItems(GetBasketModel basket)
         {
             var basketItems = new List<StockItem>();
             var groups = basket.Items.GroupBy(item => item.ProductId);
