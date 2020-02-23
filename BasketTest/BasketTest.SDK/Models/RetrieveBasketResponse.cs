@@ -11,6 +11,8 @@ namespace BasketTest.SDK.Models
 
         public decimal SubTotal { get; set; }
 
+        public decimal TotalDiscount { get; set; }
+
         public decimal TotalPrice { get; set; }
     }
 }

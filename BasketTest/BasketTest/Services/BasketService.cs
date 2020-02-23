@@ -13,23 +13,30 @@ namespace BasketTest.Services
     {
         private readonly IBasketRepository basketRepository;
         private readonly IStockItemRepository stockItemRepository;
+        private readonly IOfferRepository offerRepository;
         private readonly IMapper mapper;
 
         public BasketService(
             IBasketRepository basketRepository,
             IStockItemRepository stockItemRepository,
+            IOfferRepository offerRepository,
             IMapper mapper)
         {
             this.basketRepository = basketRepository;
             this.stockItemRepository = stockItemRepository;
+            this.offerRepository = offerRepository;
             this.mapper = mapper;
         }
 
         public async Task<GetBasketModel> GetBasket(string id)
         {
             var basket = await this.basketRepository.Get(id);
-
             var result = this.mapper.Map<GetBasketModel>(basket);
+
+            if (result == null)
+            {
+                return null;
+            }
 
             var stockItems = new List<StockItem>();
             var groups = basket.Items.GroupBy(item => item.ProductId);
@@ -48,9 +55,16 @@ namespace BasketTest.Services
                 .Where(item => !item.Tags.Intersect(nonDiscountableTags).Any())
                 .Sum(item => item.Price);
 
-            // 
+            // Offers are validated at point of basket changing. We can trust that they will still apply here
+            var offerDiscount = basket.OfferCode != null
+                ? (await this.offerRepository.GetOffer(basket.OfferCode)).Value
+                : 0m;
 
-            result.TotalPrice = result.SubTotal;
+            result.TotalDiscount = Math.Min(offerDiscount, result.SubTotal);
+
+            //result.DiscountedTotal = min(totalofgiftcards + offer, result.SubTotal);
+
+            result.TotalPrice = result.SubTotal - result.TotalDiscount; // Maybe computed property?
 
             return result;
         }

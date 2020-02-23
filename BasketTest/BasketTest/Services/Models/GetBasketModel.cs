@@ -11,9 +11,11 @@ namespace BasketTest.Services.Models
 
         public IList<GetBasketItemModel> Items { get; set; } = new List<GetBasketItemModel>();
 
-        public decimal SubTotal { get; set; } //Maybe this might be worth displaying?
+        public decimal SubTotal { get; set; }
 
-        public decimal DiscountableTotal { get; set; } // Total of all that aren't gift vouchers
+        public decimal DiscountableTotal { get; set; }
+
+        public decimal TotalDiscount { get; set; }
 
         public decimal TotalPrice { get; set; }
     }
