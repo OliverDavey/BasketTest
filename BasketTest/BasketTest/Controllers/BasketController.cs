@@ -74,9 +74,9 @@ namespace BasketTest.Controllers
 
             var result = await this.basketService.CreateBasket(model);
 
-            // Most likely going to need to fetch this info immediately afterwards anyway
+            // Strictly, this should return 201 Created, but for testing we're going to want this info immediately anyway
             var basket = await this.basketService.GetBasket(result.BasketId);
-            return Ok(basket); // Should be updated to return Created, but this makes testing a little easier for now
+            return Ok(basket);
         }
 
         [HttpPatch("{basketId}/Offer")]

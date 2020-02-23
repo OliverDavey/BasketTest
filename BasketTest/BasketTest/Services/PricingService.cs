@@ -32,7 +32,8 @@ namespace BasketTest.Services
                 var item = await this.stockItemRepository.GetItem(group.First().ProductId);
                 var pricedItem = mapper.Map<PricedBasketItemModel>(item);
 
-                pricedItems.AddRange(Enumerable.Repeat(pricedItem, group.Count()));
+                var totalQuantity = group.Sum(item => item.Quantity);
+                pricedItems.AddRange(Enumerable.Repeat(pricedItem, totalQuantity));
             }
 
             return pricedItems;

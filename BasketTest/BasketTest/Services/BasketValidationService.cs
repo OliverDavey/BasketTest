@@ -54,9 +54,11 @@ namespace BasketTest.Services
 
         private async Task<ValidationResult> CheckStock(IList<SDK.Models.CreateBasketItem> basketItems)
         {
-            foreach (var item in basketItems)
+            var groups = basketItems.GroupBy(item => item.ProductId);
+            foreach (var group in groups)
             {
-                if (item.Quantity < 0)
+                var totalQuantity = group.Sum(item => item.Quantity);
+                if (totalQuantity <= 0)
                 {
                     return new ValidationResult
                     {
@@ -65,7 +67,7 @@ namespace BasketTest.Services
                     };
                 }
 
-                var stockCheck = await this.stockItemRepository.CheckStock(item.ProductId, item.Quantity);
+                var stockCheck = await this.stockItemRepository.CheckStock(group.First().ProductId, totalQuantity);
                 if (!stockCheck.Success)
                 {
                     var response = this.mapper.Map<ValidationResult>(stockCheck);

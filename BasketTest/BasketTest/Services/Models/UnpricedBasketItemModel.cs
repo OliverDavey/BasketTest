@@ -8,5 +8,7 @@ namespace BasketTest.Services.Models
     public class UnpricedBasketItemModel
     {
         public string ProductId { get; set; }
+
+        public int Quantity { get; set; }
     }
 }
