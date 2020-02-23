@@ -1,4 +1,4 @@
-BasketTest
+# BasketTest
 
 Flow For Testing:
 
@@ -7,8 +7,8 @@ Flow For Testing:
 3. Redeem gift cards with endpoint `PATCH /Basket/{basketId}/GiftCard`
 4. Fetch basket info with endpoint `GET /Basket/{basketId}`
 
-##Test Scenarios
-###Basket 1
+## Test Scenarios
+### Basket 1
 Create Basket with
 ```
 {
@@ -35,7 +35,7 @@ Redeem gift voucher
 Retrieve Basket
 Expected Total: `60.15`
 
-###Basket 2
+### Basket 2
 Create Basket with
 ```
 {
@@ -66,7 +66,7 @@ Response message
 Retrieve Basket
 Expected Total: `51.00`
 
-###Basket 3
+### Basket 3
 Create Basket with
 ```
 {
@@ -97,7 +97,7 @@ Apply offer
 Retrieve Basket
 Expected Total: `51.00`
 
-###Basket 4
+### Basket 4
 Create Basket with
 ```
 {
@@ -131,7 +131,7 @@ Redeem gift voucher
 Retrieve Basket
 Expected Total: `41.00`
 
-###Basket 5
+### Basket 5
 Create Basket with
 ```
 {
