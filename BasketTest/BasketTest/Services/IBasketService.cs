@@ -13,5 +13,7 @@ namespace BasketTest.Services
         Task<CreateBasketResult> CreateBasket(CreateBasketModel model);
 
         Task AddOffer(string id, string offerCode);
+
+        Task AddGiftCard(string basketId, string voucherCode);
     }
 }

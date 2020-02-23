@@ -14,15 +14,18 @@ namespace BasketTest.Services
     {
         private readonly IStockItemRepository stockItemRepository;
         private readonly IOfferRepository offerRepository;
+        private readonly IGiftCardRepository giftCardRepository;
         private readonly IMapper mapper;
 
         public BasketValidationService(
             IStockItemRepository stockItemRepository,
             IOfferRepository offerRepository,
+            IGiftCardRepository giftCardRepository,
             IMapper mapper)
         {
             this.stockItemRepository = stockItemRepository;
             this.offerRepository = offerRepository;
+            this.giftCardRepository = giftCardRepository;
             this.mapper = mapper;
         }
 
@@ -110,6 +113,29 @@ namespace BasketTest.Services
                 {
                     Success = false,
                     Message = $"You have not reached the spend threshold for voucher {offerCode}. Spend another £{difference} to receive £{offer.Value} discount from your basket total"
+                };
+            }
+
+            return new ValidationResult
+            {
+                Success = true
+            };
+        }
+
+        public async Task<ValidationResult> CheckGiftCard(GetBasketModel basket, string voucherCode)
+        {
+            // Does the basket already have this same card applied?
+            // Do it like this because we don't want to actually remove the card from the pool until it has been spent
+
+            // Does the voucher exist in the store?
+            var giftCard = await this.giftCardRepository.GetGiftCard(voucherCode);
+
+            if (giftCard == null)
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Message = "Not a valid voucher code"
                 };
             }
 

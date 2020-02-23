@@ -34,6 +34,7 @@ namespace BasketTest
             services.AddSingleton<IBasketRepository, InMemoryBasketRepository>();
             services.AddSingleton<IStockItemRepository, InMemoryStockItemRepository>();
             services.AddSingleton<IOfferRepository, InMemoryOfferRepository>();
+            services.AddSingleton<IGiftCardRepository, InMemoryGiftCardRepository>();
 
             services.AddScoped<IBasketValidationService, BasketValidationService>();
             services.AddScoped<IBasketService, BasketService>();

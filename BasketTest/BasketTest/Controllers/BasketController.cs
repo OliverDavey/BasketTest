@@ -82,9 +82,9 @@ namespace BasketTest.Controllers
         [HttpPatch("{id}/Offer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddOffer([FromRoute] string id, [FromBody] AddOfferRequest request)
+        public async Task<IActionResult> AddOffer([FromRoute] string basketId, [FromBody] AddOfferRequest request)
         {
-            var basket = await this.basketService.GetBasket(id);
+            var basket = await this.basketService.GetBasket(basketId);
             if (basket == null)
             {
                 return NotFound();
@@ -98,8 +98,31 @@ namespace BasketTest.Controllers
             }
 
             // Add offer to basket
-            await this.basketService.AddOffer(id, request.OfferCode);
+            await this.basketService.AddOffer(basketId, request.OfferCode);
             return Ok();
+        }
+
+        [HttpPatch("{id}/Gift")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RedeemGiftCard([FromRoute] string basketId, [FromBody] RedeemGiftCardRequest request)
+        {
+            var basket = await this.basketService.GetBasket(basketId);
+            if (basket == null)
+            {
+                return NotFound();
+            }
+
+            var validation = await this.basketValidationService.CheckGiftCard(basket, request.VoucherCode);
+
+            if (!validation.Success)
+            {
+                return BadRequest(validation.Message);
+            }
+
+            await this.basketService.AddGiftCard(basketId, request.VoucherCode);
+            return Ok();
+
         }
     }
 }

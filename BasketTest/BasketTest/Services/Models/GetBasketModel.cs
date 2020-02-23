@@ -11,6 +11,8 @@ namespace BasketTest.Services.Models
 
         public IList<GetBasketItemModel> Items { get; set; } = new List<GetBasketItemModel>();
 
+        public IList<GetBasketGiftCardModel> RedeemedCards { get; set; } = new List<GetBasketGiftCardModel>();
+
         public decimal SubTotal { get; set; }
 
         public decimal DiscountableTotal { get; set; }

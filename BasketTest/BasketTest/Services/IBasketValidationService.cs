@@ -12,5 +12,7 @@ namespace BasketTest.Services
         Task<ValidationResult> ValidateCreateBasket(CreateBasketRequest basket);
 
         Task<ValidationResult> CheckOffer(GetBasketModel basket, string offerCode);
+
+        Task<ValidationResult> CheckGiftCard(GetBasketModel basket, string voucherCode);
     }
 }

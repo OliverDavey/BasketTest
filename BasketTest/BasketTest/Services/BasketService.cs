@@ -82,9 +82,14 @@ namespace BasketTest.Services
             };
         }
 
-        public async Task AddOffer(string id, string offerCode) // Should probably accept and return a model
+        public async Task AddOffer(string basketId, string offerCode) // Should probably accept and return a model
         {
-            await this.basketRepository.AddOffer(id, offerCode);
+            await this.basketRepository.AddOffer(basketId, offerCode);
+        }
+
+        public async Task AddGiftCard(string basketId, string voucherCode)
+        {
+            await this.basketRepository.AddGiftCard(basketId, voucherCode);
         }
     }
 }
