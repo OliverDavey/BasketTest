@@ -8,6 +8,7 @@ namespace BasketTest.Data.Models
     public enum ProductTags
     {
         HeadGear,
+        Hat,
         ActiveWear,
         Winter,
         GiftCard

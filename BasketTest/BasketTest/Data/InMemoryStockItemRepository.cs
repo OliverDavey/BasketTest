@@ -14,8 +14,8 @@ namespace BasketTest.Data
         {
             this.stockItems = new List<StockItem>
             {
-                new StockItem { ProductId = "shoddy_hat", Name = "Hat", Price = 10.50m, Quantity = 10, Tags = {ProductTags.HeadGear} },
-                new StockItem { ProductId = "luxury_hat", Name = "Hat", Price = 25.00m, Quantity = 10, Tags = {ProductTags.HeadGear} },
+                new StockItem { ProductId = "shoddy_hat", Name = "Hat", Price = 10.50m, Quantity = 10, Tags = {ProductTags.Hat} },
+                new StockItem { ProductId = "luxury_hat", Name = "Hat", Price = 25.00m, Quantity = 10, Tags = {ProductTags.Hat} },
                 new StockItem { ProductId = "thin_jumper", Name = "Jumper", Price = 26.00m, Quantity = 10, Tags = {ProductTags.Winter} },
                 new StockItem { ProductId = "warm_jumper", Name = "Jumper", Price = 54.65m, Quantity = 10, Tags = {ProductTags.Winter} },
                 new StockItem { ProductId = "head_light", Name = "Head Light", Price = 3.50m, Quantity = 10, Tags = {ProductTags.HeadGear, ProductTags.ActiveWear} },
