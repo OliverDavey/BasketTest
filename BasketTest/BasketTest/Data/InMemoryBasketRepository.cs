@@ -43,8 +43,7 @@ namespace BasketTest.Data
         public async Task<Basket> AddGiftCard(string basketId, string voucherCode)
         {
             var basket = await this.Get(basketId);
-            // Add the gift card here
-
+            basket.GiftCards.Add(new BasketGiftCard { VoucherCode = voucherCode });
             return basket;
         }
     }

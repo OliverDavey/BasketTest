@@ -9,7 +9,9 @@ namespace BasketTest.Data.Models
     {
         public string Id { get; set; }
 
-        public IEnumerable<BasketItem> Items { get; set; }
+        public IList<BasketItem> Items { get; set; } = new List<BasketItem>();
+
+        public IList<BasketGiftCard> GiftCards { get; set; } = new List<BasketGiftCard>();
 
         public string OfferCode { get; set; }
     }

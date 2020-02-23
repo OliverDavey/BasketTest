@@ -7,7 +7,7 @@ namespace BasketTest.Data.Models
 {
     public class BasketItem
     {
-        public string Id { get; set; }
+        public string ItemId { get; set; }
 
         public string ProductId { get; set; }
 

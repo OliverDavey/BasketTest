@@ -23,13 +23,14 @@ namespace BasketTest.Profiles
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
             CreateMap<Services.Models.PricedBasketItemModel, Data.Models.CreateBasketItem>();
             CreateMap<Data.Models.CreateBasketItem, Data.Models.BasketItem>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
+                .ForMember(dest => dest.ItemId, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
 
             // Reading
             CreateMap<Data.Models.Basket, Services.Models.GetBasketModel>();
             CreateMap<Data.Models.BasketItem, Services.Models.GetBasketItemModel>();
+            CreateMap<Data.Models.GiftCard, Services.Models.GetBasketGiftCardModel>();
             CreateMap<Services.Models.GetBasketModel, SDK.Models.RetrieveBasketResponse>();
-            CreateMap<Services.Models.GetBasketItemModel, SDK.Models.RetrieveBasketItem>(); //perhaps won't be needed when we aggregate them...
+            CreateMap<Services.Models.GetBasketItemModel, SDK.Models.RetrieveBasketItem>();
 
             CreateMap<Data.Models.StockItem, Services.Models.PricedBasketItemModel>();
 

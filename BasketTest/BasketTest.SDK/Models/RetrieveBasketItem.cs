@@ -6,9 +6,9 @@ namespace BasketTest.SDK.Models
 {
     public class RetrieveBasketItem
     {
-        public string ProductId { get; set; }
+        public string ItemId { get; set; }
 
-        public int Quantity { get; set; }
+        public string ProductId { get; set; }
 
         public decimal Price { get; set; }
     }

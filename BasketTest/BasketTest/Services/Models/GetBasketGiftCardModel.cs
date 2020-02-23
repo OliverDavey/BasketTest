@@ -7,5 +7,6 @@ namespace BasketTest.Services.Models
 {
     public class GetBasketGiftCardModel
     {
+        public decimal Value { get; set; }
     }
 }

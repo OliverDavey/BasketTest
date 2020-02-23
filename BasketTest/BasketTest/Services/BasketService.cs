@@ -14,17 +14,20 @@ namespace BasketTest.Services
         private readonly IBasketRepository basketRepository;
         private readonly IStockItemRepository stockItemRepository;
         private readonly IOfferRepository offerRepository;
+        private readonly IGiftCardRepository giftCardRepository;
         private readonly IMapper mapper;
 
         public BasketService(
             IBasketRepository basketRepository,
             IStockItemRepository stockItemRepository,
             IOfferRepository offerRepository,
+            IGiftCardRepository giftCardRepository,
             IMapper mapper)
         {
             this.basketRepository = basketRepository;
             this.stockItemRepository = stockItemRepository;
             this.offerRepository = offerRepository;
+            this.giftCardRepository = giftCardRepository;
             this.mapper = mapper;
         }
 
@@ -38,6 +41,50 @@ namespace BasketTest.Services
                 return null;
             }
 
+            var stockItems = await this.GetStockItems(basket);
+            result.SubTotal = stockItems.Sum(item => item.Price);
+            result.DiscountableTotal = this.GetDiscountableTotal(stockItems);
+
+            // Offers are validated at point of basket changing. We can trust that they will still apply here
+            var offerDiscount = basket.OfferCode != null
+                ? (await this.offerRepository.GetOffer(basket.OfferCode)).Value
+                : 0m;
+
+            var giftCards = await this.GetGiftCards(basket);
+            result.RedeemedCards = this.mapper.Map<IList<GetBasketGiftCardModel>>(giftCards);
+
+            var giftCardTotal = giftCards.Sum(card => card.Value);
+
+            result.TotalDiscount = Math.Min(offerDiscount + giftCardTotal, result.DiscountableTotal);
+            result.TotalPrice = result.SubTotal - result.TotalDiscount;
+
+            return result;
+        }
+
+        private async Task<List<GiftCard>> GetGiftCards(Basket basket)
+        {
+            var giftCards = new List<GiftCard>();
+            foreach (var card in basket.GiftCards)
+            {
+                var giftCard = await this.giftCardRepository.GetGiftCard(card.VoucherCode);
+                giftCards.Add(giftCard);
+            }
+
+            return giftCards;
+        }
+
+        private decimal GetDiscountableTotal(List<StockItem> stockItems)
+        {
+            var nonDiscountableTags = new List<ProductTags> { ProductTags.GiftCard };
+            var result = stockItems
+                .Where(item => !item.Tags.Intersect(nonDiscountableTags).Any())
+                .Sum(item => item.Price);
+
+            return result;
+        }
+
+        private async Task<List<StockItem>> GetStockItems(Basket basket)
+        {
             var stockItems = new List<StockItem>();
             var groups = basket.Items.GroupBy(item => item.ProductId);
             foreach (var group in groups)
@@ -47,26 +94,7 @@ namespace BasketTest.Services
                 stockItems.AddRange(Enumerable.Repeat(item, group.Count()));
             }
 
-            result.SubTotal = stockItems.Sum(item => item.Price);
-
-            // This should be handled elsewhere
-            var nonDiscountableTags = new List<ProductTags> { ProductTags.GiftCard };
-            result.DiscountableTotal = stockItems
-                .Where(item => !item.Tags.Intersect(nonDiscountableTags).Any())
-                .Sum(item => item.Price);
-
-            // Offers are validated at point of basket changing. We can trust that they will still apply here
-            var offerDiscount = basket.OfferCode != null
-                ? (await this.offerRepository.GetOffer(basket.OfferCode)).Value
-                : 0m;
-
-            result.TotalDiscount = Math.Min(offerDiscount, result.SubTotal);
-
-            //result.DiscountedTotal = min(totalofgiftcards + offer, result.SubTotal);
-
-            result.TotalPrice = result.SubTotal - result.TotalDiscount; // Maybe computed property?
-
-            return result;
+            return stockItems;
         }
 
         public async Task<CreateBasketResult> CreateBasket(Models.CreateBasketModel model)
@@ -82,7 +110,7 @@ namespace BasketTest.Services
             };
         }
 
-        public async Task AddOffer(string basketId, string offerCode) // Should probably accept and return a model
+        public async Task AddOffer(string basketId, string offerCode)
         {
             await this.basketRepository.AddOffer(basketId, offerCode);
         }

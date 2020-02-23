@@ -38,12 +38,12 @@ namespace BasketTest.Controllers
             this.logger = logger;
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("/{basketId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get([FromRoute] string id)
+        public async Task<IActionResult> Get([FromRoute] string basketId)
         {
-            var basket = await this.basketService.GetBasket(id);
+            var basket = await this.basketService.GetBasket(basketId);
             if (basket == null)
             {
                 return NotFound();
@@ -79,7 +79,7 @@ namespace BasketTest.Controllers
             return Ok(basket); // Should be updated to return Created, but this makes testing a little easier for now
         }
 
-        [HttpPatch("{id}/Offer")]
+        [HttpPatch("{basketId}/Offer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddOffer([FromRoute] string basketId, [FromBody] AddOfferRequest request)
@@ -102,7 +102,7 @@ namespace BasketTest.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id}/Gift")]
+        [HttpPatch("{basketId}/Gift")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RedeemGiftCard([FromRoute] string basketId, [FromBody] RedeemGiftCardRequest request)
