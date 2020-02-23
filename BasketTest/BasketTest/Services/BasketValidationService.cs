@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BasketTest.Data;
+using BasketTest.Data.Models;
 using BasketTest.SDK.Models;
 using BasketTest.Services.Models;
 using System;
@@ -12,13 +13,16 @@ namespace BasketTest.Services
     public class BasketValidationService : IBasketValidationService
     {
         private readonly IStockItemRepository stockItemRepository;
+        private readonly IOfferRepository offerRepository;
         private readonly IMapper mapper;
 
         public BasketValidationService(
             IStockItemRepository stockItemRepository,
+            IOfferRepository offerRepository,
             IMapper mapper)
         {
             this.stockItemRepository = stockItemRepository;
+            this.offerRepository = offerRepository;
             this.mapper = mapper;
         }
 
@@ -33,7 +37,21 @@ namespace BasketTest.Services
                 };
             }
 
-            foreach (var item in basket.Items)
+            var stockCheck = await this.CheckStock(basket.Items);
+            if (!stockCheck.Success)
+            {
+                return stockCheck;
+            }
+
+            return new ValidationResult
+            {
+                Success = true
+            };
+        }
+
+        private async Task<ValidationResult> CheckStock(IList<CreateBasketItem> basketItems)
+        {
+            foreach (var item in basketItems)
             {
                 if (item.Quantity < 0)
                 {
@@ -56,6 +74,64 @@ namespace BasketTest.Services
             {
                 Success = true
             };
+        }
+
+        public async Task<ValidationResult> CheckOffer(GetBasketModel basket, string offerCode)
+        {
+            var offer = await this.offerRepository.GetOffer(offerCode);
+
+            if (offer == null)
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Message = "Offer code does not exist"
+                };
+            }
+
+            // Are there items that it applies to
+            var basketItems = await this.GetItems(basket, offer);
+            var itemTags = basketItems.SelectMany(item => item.Tags);
+
+            if (!itemTags.Intersect(offer.ApplicableItems).Any())
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Message = $"There are no products in your basket applicable to voucher {offerCode}"
+                };
+            }
+
+            // Have we met the minimum-spend threshold
+            var subTotal = basketItems.Sum(item => item.Price); // WRONG - needs to be the discountable subtotal
+            if (subTotal < offer.Threshold)
+            {
+                var difference = offer.Threshold - subTotal;
+                return new ValidationResult
+                {
+                    Success = false,
+                    Message = $"You have not reached the spend threshold for voucher {offerCode}. Spend another £{difference} to receive £{offer.Value} discount from your basket total"
+                };
+            }
+
+            return new ValidationResult
+            {
+                Success = true
+            };
+        }
+
+        private async Task<List<StockItem>> GetItems(GetBasketModel basket, Offer offer)
+        {
+            var basketItems = new List<StockItem>();
+            var groups = basket.Items.GroupBy(item => item.ProductId);
+            foreach (var group in groups)
+            {
+                var stockItem = await this.stockItemRepository.GetItem(group.First().ProductId);
+
+                basketItems.AddRange(Enumerable.Repeat(stockItem, group.Count()));
+            }
+
+            return basketItems;
         }
     }
 }

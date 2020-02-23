@@ -13,6 +13,8 @@ namespace BasketTest.Services.Models
 
         public decimal SubTotal { get; set; } //Maybe this might be worth displaying?
 
+        public decimal DiscountableTotal { get; set; } // Total of all that aren't gift vouchers
+
         public decimal TotalPrice { get; set; }
     }
 }

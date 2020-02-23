@@ -10,5 +10,7 @@ namespace BasketTest.Data.Models
         public string Id { get; set; }
 
         public IEnumerable<BasketItem> Items { get; set; }
+
+        public string OfferCode { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace BasketTest.Data.Models
     {
         HeadGear,
         ActiveWear,
-        Winter
+        Winter,
+        GiftCard
     }
 }

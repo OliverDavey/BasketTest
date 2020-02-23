@@ -26,7 +26,11 @@ namespace BasketTest.Services
             var basket = await this.basketRepository.Get(id);
 
             var result = this.mapper.Map<GetBasketModel>(basket);
+            result.SubTotal = basket.Items.Sum(item => item.Price);
             result.TotalPrice = basket.Items.Sum(item => item.Price);
+
+            // going to need to know about tags here
+            //result.DiscountableTotal = basket.Items.Where(item => item)
 
             return result;
         }

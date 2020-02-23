@@ -18,7 +18,9 @@ namespace BasketTest.Data
                 new StockItem { ProductId = "luxury_hat", Name = "Hat", Price = 25.00m, Quantity = 10, Tags = {ProductTags.HeadGear} },
                 new StockItem { ProductId = "thin_jumper", Name = "Jumper", Price = 26.00m, Quantity = 10, Tags = {ProductTags.Winter} },
                 new StockItem { ProductId = "warm_jumper", Name = "Jumper", Price = 54.65m, Quantity = 10, Tags = {ProductTags.Winter} },
-                new StockItem { ProductId = "head_light", Name = "Head Light", Price = 3.50m, Quantity = 10, Tags = {ProductTags.HeadGear, ProductTags.ActiveWear} }
+                new StockItem { ProductId = "head_light", Name = "Head Light", Price = 3.50m, Quantity = 10, Tags = {ProductTags.HeadGear, ProductTags.ActiveWear} },
+                new StockItem { ProductId = "small_gift", Name = "Gift Voucher", Price =  5.00m, Quantity = 1000, Tags = {ProductTags.GiftCard}},
+                new StockItem { ProductId = "large_gift", Name = "Gift Voucher", Price =  50.00m, Quantity = 1000, Tags = {ProductTags.GiftCard}}
             };
         }
 
