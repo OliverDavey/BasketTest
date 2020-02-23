@@ -127,8 +127,16 @@ namespace BasketTest.Services
 
         public async Task<ValidationResult> CheckGiftCard(GetBasketModel basket, string voucherCode)
         {
-            // Does the basket already have this same card applied?
-            // Do it like this because we don't want to actually remove the card from the pool until it has been spent
+            // Check if voucher already exists on basket
+            // Don't want to actually remove the card from the pool until order has been placed
+            if (basket.RedeemedCards.Any(card => card.VoucherCode == voucherCode))
+            {
+                return new ValidationResult
+                {
+                    Success = false,
+                    Message = "Voucher already redeemed"
+                };
+            }
 
             // Does the voucher exist in the store?
             var giftCard = await this.giftCardRepository.GetGiftCard(voucherCode);
