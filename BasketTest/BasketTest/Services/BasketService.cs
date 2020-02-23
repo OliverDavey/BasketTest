@@ -45,15 +45,19 @@ namespace BasketTest.Services
             result.SubTotal = stockItems.Sum(item => item.Price);
             result.DiscountableTotal = this.GetDiscountableTotal(stockItems);
 
-            // Offers are validated at point of basket changing. We can trust that they will still apply here
-            var offerDiscount = basket.OfferCode != null
-                ? (await this.offerRepository.GetOffer(basket.OfferCode)).Value
-                : 0m;
-
             var giftCards = await this.GetGiftCards(basket);
             result.RedeemedCards = this.mapper.Map<IList<GetBasketGiftCardModel>>(giftCards);
 
             var giftCardTotal = giftCards.Sum(card => card.Value);
+
+            // Offers are validated at point of basket changing. We can trust that they will still apply here
+            var offerDiscount = 0m;
+            if (basket.OfferCode != null)
+            {
+                var offer = await this.offerRepository.GetOffer(basket.OfferCode);
+                var discountable = this.GetOfferApplicableDiscount(stockItems, offer);
+                offerDiscount = Math.Min(discountable, offer.Value);
+            }
 
             result.TotalDiscount = Math.Min(offerDiscount + giftCardTotal, result.DiscountableTotal);
             result.TotalPrice = result.SubTotal - result.TotalDiscount;
@@ -71,6 +75,19 @@ namespace BasketTest.Services
             }
 
             return giftCards;
+        }
+
+        private decimal GetOfferApplicableDiscount(List<StockItem> stockItems, Offer offer)
+        {
+            if (!offer.ApplicableItems.Any())
+            {
+                return stockItems.Sum(item => item.Price);
+            }
+
+            var applicableItems = stockItems
+                .Where(item => item.Tags.Intersect(offer.ApplicableItems).Any());
+
+            return applicableItems.Sum(item => item.Price);
         }
 
         private decimal GetDiscountableTotal(List<StockItem> stockItems)
