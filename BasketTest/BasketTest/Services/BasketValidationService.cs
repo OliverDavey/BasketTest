@@ -98,7 +98,8 @@ namespace BasketTest.Services
             var basketItems = await this.GetItems(basket);
             var itemTags = basketItems.SelectMany(item => item.Tags);
 
-            if (!itemTags.Intersect(offer.ApplicableItems).Any())
+            if (offer.ApplicableItems.Any()
+                && !itemTags.Intersect(offer.ApplicableItems).Any())
             {
                 return new ValidationResult
                 {

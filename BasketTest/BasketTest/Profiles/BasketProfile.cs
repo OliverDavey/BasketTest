@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BasketTest.SDK.Models;
-using BasketTest.Data.Models;
-using BasketTest.Services.Models;
 
 namespace BasketTest.Profiles
 {
@@ -34,7 +31,7 @@ namespace BasketTest.Profiles
 
             CreateMap<Data.Models.StockItem, Services.Models.PricedBasketItemModel>();
 
-            CreateMap<CheckStockResult, Services.Models.ValidationResult>();
+            CreateMap<Data.Models.CheckStockResult, Services.Models.ValidationResult>();
         }
     }
 }
